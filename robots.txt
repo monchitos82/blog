@@ -1,0 +1,31 @@
+# Indexers
+User-agent: archive.org_bot
+User-agent: ia_archiver
+User-agent: Googlebot
+User-agent: Googlebot-Image
+User-agent: Mediapartners-Google
+User-agent: AdsBot-Google
+User-agent: Bingbot
+User-agent: AdIdxBot
+Allow: /*.html$
+
+# AI
+User-agent: GPTBot
+User-agent: ChatGPT-User
+User-agent: OIMG-User
+User-agent: ClaudeBot
+User-agent: Claude-Web
+User-agent: Claude-SearchBot
+User-agent: Google-Extended
+User-agent: Google-CloudVertexBot
+User-agent: PerplexityBot
+User-agent: Applebot
+User-agent: Applebot-Extended
+User-agent: CCBot
+
+Allow: /*.txt$
+Disallow: /
+
+# Default
+User-agent: *
+Disallow: /
