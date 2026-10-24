@@ -144,6 +144,10 @@ li.clean {
   list-style: none;
 }
 
+li::marker .accent {
+  color: var(--accent-color);
+}
+
 li.separator {
   border-block-end: 0.1rem solid var(--separator-color);
   list-style: none;
