@@ -1,0 +1,240 @@
+Posts
+---
+
+
+# Model routing 101 (01/26)
+
+Being the first post of 2026, I wanted to make this post something more complete without missing the opportunity to offer some technical advice or some criticism. I think I wanted to take the chance to work with LLMs again; it seems that the trend is catching up and I like to think I already learned a thing or two on the subject during the past few years.
+
+I will start by presenting the scenario where I currently am: As I search for a job here in Mexico, opportunities differ to what you would find in the Bay Area. In comparison, here the scope is narrowed to certain tools and activities... and problems! That's quite why I gave up on doing Site Reliability here, but aiming for a  Python position is not very different in reality, either you do web development in Django (or FastAPI nowadays), or you do **whatever** is perceived as AI work. On the latter, I think one of the "experience" requirements that has drawn my attention more than once is that of "working with LLM implementations". The description is vague at best and many times this only translates to: Writing AWS Lambda functions and routing requests to AWS Bedrock, which somehow is an interesting problem by itself, but it means no LLM implementation experience whatsoever. It really makes me wonder if we can consider "an expert" a person capable of reading the SciKitLearn documentation, or we are just masking a bit of Flask with a bit of basic ETL and well, I have no way to validate this, but I am very suspicious of something: Most "experts" have no damn idea about what they do and opt to defer this to whatever Claude spits out (It still has some merit being able to **RTFM**, don't get me wrong). I would do the same in my ignorance, except that my curiosity pushes me to ask questions. So I asked them.
+
+Trying to solve this non-trivial problem, I decided to ask the only "experts" I have around, and I asked the LLMs. What was the problem again? Oh yeah:
+
+You have a prompt and a suite of models you can use. Each model has a different specialty and a cost. You want to optimize the decision process to route a prompt to the most fit model in the most cost efficient way.
+
+Once upon a time, I was tasked with translating a bunch of decision rules for some machine learning (supervised) models. I know this task by itself is cumbersome and non-trivial, but is this what the position is all about? I think this is just part of the problem. When bouncing ideas with the **models** (From this point onwards, I'll use bold when I refer to large language models), I concluded that if we could put this into a funnel, the early classification based on some rough heuristic is maybe the top layer. When done right, this can mean saving a lot of time and processing considering this would enable using less sophisticated machine learning models to do the classification work, but I am no expert, it just makes sense to me.
+
+Based on my own observation and what I got as a first response, many AI companies rely on some hard rules including the ability of the user to pick a model (or the assumption that most will never touch that dropdown menu), whatever it is, classification _could_ start from the user, so if the input is somehow influenced by the user interface, maybe we have that top layer figured out.
+
+This could be implemented by using base modeling, considering we have the task, source, prompt and some specifics that can be easily mapped using Pydantic (for reasons, in all clarity you might as well just use `Dataclass`), but I think this early classification is just good for a tracing purpose later down the funnel. At some point the **models** suggested using another LLM to do the classification based on patterns, while this could work at a small scale, I dare to believe that this would have problems scaling to higher volumes of either words or prompts. What can be done then? If the filtering is good enough (this concept by itself requires a whole different section, we will get there) we could implement a second layer of classification based on different approaches: Regressions or decision trees. At this point, just knowing Python is still good enough, but we need to start figuring out the differences between these machine learning techniques for classification. SciKitLearn documentation is fair, but it won't have an _ELI5_ section, so let me try to help:
+
+Regressions could perform better (in time) at the cost of accuracy when the classification training data and features are poor at best. The decision trees will cost both in time and resources (`Random Forest -> XGBoost -> LightGBM` in that order), but offer a greater degree of confidence when properly configured. Here knowing Python is not very useful anymore, understanding when we are no longer tuning and start over-fitting or simply adding more complexity without gains in the classification requires a good grasp on how these models work and more importantly, on both the feedback loop and the training data.
+
+This, by the way, is just a second/third layer down the funnel, and it really is just part of the design decision that we might call out later and just opt to rebuild. Here is where feedback and experimentation come into play, which I would say, becomes a blurry second layer. There is no confidence in the accuracy of a machine learning model implementation if the classification at the first layer is not good enough or the training data is insufficient. With this in mind, it is a good idea to implement A/B testing to validate the effectiveness of the scoring. This idea, however, is imperfect if the volume of requests is limited or inconsistent (we can opt to replay requests, but this is not a decision we can make free of charge).
+
+The **models** correctly suggested to do some feature extraction at layer one, where we can estimate tokenization, this task however is not simple because there are considerations to be made, from the breakdown of sentences to more complex conditions, like understanding that in some languages a single character is a word and could cost more if we just try to break down the sentence. Again, knowing Python just won't cut it, e.g. "你好" would mean 4 tokens compared to the equivalent 1 token word: "Hello".
+
+At this point I start noticing a pattern, each layer is going to be influenced by the feedback loop. So here's where we can start to delve into the cost allocation. I believe that budgeting the experiments and tracking the consumption of the budget vs. the effectiveness of the funnel layers is not a trivial task or an easy thing to do, basically you need to instrument and trace the decisions and the cost-effectiveness of every decision. This also requires a way to classify the feedback, e.g. if a prompt is being rephrased twice because the first response is not of good quality, will we be able to mark it as a duplicate and more important, to route it effectively?
+
+At this point I believe the _problem_ has no clear solution. Even if we use cross-validation (which we must) at the classification level, we still have no _defined_ way to do cross-validation at LLM level. Well, the **models** agree, there are companies creating their own implementations and algorithms, trying to solve this problem, and while Claude was exhaustively creating code snippets of what the implementation would look like, I believe this is not a programming language problem anymore (if it ever was), and it is more of an architecture one; definitely Python is loaded with APIs and packages, but the tooling definitely is not the _hard to get right_ part of the problem.
+
+I bet you are curious about the layers of the funnel, so let me share a diagram:
+
+```                                                                                     
+                                                                                     [------]---| Feedback analysis is done at every
+\==========================================================================================/    | layer. This improves the classifi-
+ \                                                                                  /     /     | cation through training data
+  \                                     User request                               /     /      | quality and effectiveness measure-
+   \                                                                              /     /       | ment.
+    \----------------------------------------------------------------------------/     /        | 
+     \                               Input validation                           /     /         | This can help improve implementa-
+      \                                                                        /     /          | tion or signal the need for a
+       \                    Pre-processing and early classification           /     /           | different approach.
+        \                                                                    /     /            | 
+         \                      Caching and metric creation                 /     /             | All data produced here is meant to
+          \----------------------------------------------------------------/     /              | be used for retraining down the
+           \                         Feature extraction                   /     /               | funnel.
+            \                                                            /     /
+             \                       Experiment routing                 /     /
+              \--------------------------------------------------------/     /
+               \                                                      /     /
+                \               Classification model routing         /     /
+                 \                                                  /     /
+                  \------------------------------------------------/     /
+                   \                Infrastructure routing        /     /
+                    \                                            /     /
+                     \                   Execution              /     /
+                      \----------------------------------------/     /
+                       \                                      /     /
+                        \               Evaluation           /     /
+                         \                                  /     /
+                         |=================================/     |
+                         |                                       |
+                         |              Retraining               |
+                         |                                       |
+                         |=======================================|
+
+```
+
+So this is kind of an imperfect way to represent the funnel idea and of course it oversimplifies the whole set of concepts behind, the best part of it: I am not certain about this to be accurate, but hey, nobody does! At least I'm not pretending that I know.
+
+I am intentionally skipping on more advanced concepts (that I don't master either) like neural networks or the use of tensors and torch libraries to encode and train models because, as I said, I am no expert, and I believe that if we can't grasp on the basics, trying to blindly navigate through, what is indeed, a black box will not be of greater help. If we are stubborn and try to force the skills regardless, well, I just hope the profile being recruited no longer is just Python programming, but data science, because as I said, this is not a language kind of problem (if it ever was).
+
+
+# The statistics (dangerous) trap (02/26)
+
+As someone who cares about metrics, it is obvious that statistics are important to me, but it hasn't always been like that. Until I started living in a world of metrics, alerts and performance, statistics were an occasional thought, regardless, they are everywhere.
+
+Politicians and executives love playing with them just like any sales person and what seems to be a very interesting world of numbers and their meaning turns into a dangerous trap. Thus, being smart about them is our best defense.
+
+This post is no lecture on statistics, simply it is a list of some examples for us to think things thoroughly for the sake of nurturing our critical thinking.
+
+## 1 - The beef vs AI narrative
+
+It is a no-brainer that beef as an industry is resource hungry. It has been demonstrated that the consumption of land, water and energy to produce a single patty of beef is massive. The byproduct and waste generated by this food production cycle is not better. Still, food has to make it to our table. AI by itself is not very demanding of resources according to what universities and AI companies have published. The trap here is comparing a production process to a service of inference. Normally, numbers will favor the service since they only cover the operational costs, but for the service to exist, there is an entire production process being dismissed, this eliminates the _apples to apples_ approach. This example is not meant to defend the beef industry (the industry cherry picks their metrics too), simply stresses the need for extending the context rather than using numbers selectively.
+
+1 lb of beef needs 1,850 gallons of water, 1 query in a top-tier LLM model needs 0.01 gallons... except it dismisses the production of a cluster of 10,000 GPUs with a similar lifespan of that from a cow, the building of a datacenter, extraction of silicon for the processors and metals for the and circuits, etc. It just focuses on power and cooling... Well, that's not right, is it? If you factor in the production and operation of all the parts of the stack, a rough estimate is that each query may take up to 0.66 gallons of water. That's not so little anymore.
+
+If you read between the lines, this is not a pointing fingers kind of take, this is just highlighting the dangers of cherry-picking data. Numbers can represent anything you want if you craft your story in a way that favors you. Luckily for us, numbers can also surface the truth behind a narrative.
+
+## 2 - The "security improvements" fallacy
+
+Politicians love to present numbers to demonstrate their progress, yet they selectively use means rather than medians and compare samples vs. aggregates to affect the signal they present. If you take the sum of violent crime events and you compare them to the moving average or just a different time window within your administration (let's say a quarter), then the sum will massively outnumber what you present, now throw a bar chart and boom! you suddenly outshine the competitors.
+
+In Latin America, politicians love to show their progress by selectively showing data, e.g. daily violent death statistics or nowadays in a "more sophisticated" way: just tagging ~30-60% as missing people. This indeed produces lower death rates in comparison, but it also demonstrates their lack of brains, if you compare your accumulation of 100,000 deaths vs the previous administration total of 120,000, definitely the current number is lower, except when you look that the aggregation is only spanning over 3 years, vs. a 6 year span from the other. Even in a linear growth, current's accumulation would add up to 200,000 by the 6th year.
+
+## 3 - The truth hiding within latency's long tail
+
+Latency metrics are very, very misleading when not properly understood. Let's start by something simple: metrics collection rarely will use a 100% sampling. That means, whatever you see, will already be manipulated by the time you run your analysis. Even if not, your options of analysis could be: using averages (very wrong), using percentiles (still misleading), using histograms (hard to break down right), or using individual datapoints (very hard to analyze and attribute). Latency normally tends to present itself within a normal distribution curve, but outliers are trickier than you think. Long tails can create the pareto of a pareto principle, you end up looking for multiple needles in multiple haystacks.
+
+If you wrongly look at the average latency of a service being 500ms, then your latency might look ok, but what if you unwrap the data? If sampled, that means the average of 20, maybe 30% of all requests. It also skews the values where 8 requests respond in 500ms while 1 could take 100ms and another close to 2 seconds. If you look at percentiles it is not much better if you look at the wrong one, by this same example the P90 is 500ms, except in the long tail, you have a response that is close to 4x the rest. In real life examples, that number can shoot up to minutes and you wouldn't even notice... let alone what might happen with the 23-40 (_depending on the sample_) requests you didn't measure.
+
+So, please, if you read this, next time you are presented with statistics, be ready to shoot some questions, be ready to dig for details, keep your calculator close and your criticism closer.
+
+
+# AI laundry (03/26)
+
+A disclaimer: I am no machine-learning or data scientist expert, even when my Python code smells like fresh flowers. I seek to understand things beyond the surface, I understand some of the math beneath them, yet I don't know the in and outs of all parts of the training process in the new large language models.
+
+Having said that, I think all the promised disruption is nothing, but a sea of lies, sprinkled with some truths.
+
+Today, as I messed up my white laundry, I was seeking options to try to fix it. I tried the home remedies, the magazine advice and then opened the browser to seek for advice. Since AI is force fed to us, I had to read through the synthesis of data the AI made and it hit me. My laundry is still messed up, but I got some clarity on why this is just not going to break through as the liars tell.
+
+Us humans, we had to learn things by running them through different scenarios, our experience, our knowledge, it all started with trial and error where we had to focus on many dimensions. There was no numeric reward, the reward was called survival. As our species progressed, we expanded our knowledge, passing it on, using it to create, to propose, to explore. We still had the world with its own set of unbendable rules for us to try our concepts. There is no probabilistic reward to that, I dare to call it binary if any. Our ideas either work or they don't. They don't get scored, we might get the feedback on our idea based on its efficiency, but at the end of the day, the physical world rules will test them and trip where they fail. We have learned to think across many dimensions because as we solve problems, we exercise the simulation of results mentally. We try our idea before we ground it. We try our idea based on our own knowledge and perceptions, and once we set it to manifest, we let the world test it again. This goes beyond the physical world of course. We have learned to run this exercise in a world of concepts and conventions. As a social species, we test our ideas and our proposals through beings with a similar level of intelligence. Our inventiveness is driven by many rewards; we want to be recognized, admired, accepted. Surviving might be the primal drive, but we have a world of concepts atop and we must filter every idea through it... This driver has pushed us to do many awesome feats; to break our own boundaries, to test physics beyond what we perceive with our senses, and of course, to lie and deceive.
+
+In what we call computer science, we have seen a great set of progress from generative AI because it is a fantastic predictive machine. It is also a fantastic organization engine that can break down "problems" into small solvable ones. Just as fantastic, our work in computer science has been an exciting journey for many of us, where every single achievement we create we want to share and document to the slightest detail, let alone we have a full control over what we produce, it is a synthesis of our own perception of the world. We have produced and found innovative and almost endless ways to process the information we can collect. Information technology has not been shy of using data, data is at its core after all. Our so-called science is bound to strict rules of mathematics. Whatever we do, is limited to what discrete mathematics permits and even when we may simulate many other levels of the physical world, we are still just doing that: simulating. Our simulation is also restricted by our own perceptions. We may fantasize what is not physically possible, but we may never replicate our fantasy somewhere else.
+
+In the current era, knowledge has been made available like never before. We can feed our models of the world with what seems an infinite amount of data, yet we can quantify it. Our obsession to produce data and to make it available for the sake of progress or just recognition, has made possible the existence of models, a synthesis of knowledge, that can group, categorize, identify and predict outcomes in what seems an almost impossible way, because, somehow for our limited ability to know, learn and memorize, it is definitely impossible for an individual to contain the amount of data our species has been able to produce across a few thousand years.
+
+Going back to computer science and the ongoing dynamic of replacing humans with models and agents (fancy names for automata or finite state machines), we must be humble and acknowledge that most information technology businesses work around repeatable recipes with the ultimate goal of convenience to the users. We can replace the parts that create operations within a limited set of rules, languages, architectures, but as complexity grows and as innovation starts to be needed, the ability to deliver wanes. Certainly, many industries replicate this dynamic, manufacturing to give the most proximal example, however, unlike computers, manufacturing has to account for the physical world, and while many parts of production have been automated across centuries, some parts of it will remain subject to the reality of an ever changing set of layers defined by external and uncontrolled circumstances or will need just so much focus into small details that a machine will simply not solve for the cost associated to the specialization it requires.
+
+We have been told that these models will be comparable to people holding the highest degrees of education. Knowledge of that kind of people might be available to the models because those people in particular are quite keen to produce and expose their findings to the world. It is part of the process of earning the degree after all! But saying that fallacy, is reducing the process that happens before the knowledge is compiled and published. That human being was educated, that person had to learn a wide set of skills, to think through a wide set of dimensions, to replicate a myriad of circumstances and even then to push beyond and try what is not written, to interpret it and to deduct what was achieved if an achievement is made. A model can only replicate this through what seems as a serendipitous event, which actually is. Even hallucination, an unexpected result on an invalid set of rules cannot be accepted as such an achievement if not by probability itself, but if we accepted all mistakes as achievements, how would we safely filter the results if not by using experience and experts?
+
+I think generative AI, as the machine that can serve as a complement to unwritten documents, that can serve as a source of knowledge, that is capable of interpreting a request in the less structured way of asking (by technologist standards) is a fantastic tool. It can help us accelerate and validate ideas, it can help us understand based on which precepts a response is produced, it can help productive people stay productive. It can help automate what is by nature replicable. But we need to be clear in understanding what are its limits. We may almost feel connected to it, we may perceive it as being able to understand us in a level only our species can. It could be that the years of forced isolation we suffered have pushed that bias. It is, however, pedantic to assume it can replace a human brain.
+
+I cannot help, but be curious about what comes after. What can be presented as a breakthrough. What can be sold as a great replacement for the industry. What I am certain, is that discoveries are still only achievable by our biological nature; just as to other species, we are still existing in a playground that is beyond perception and understanding of what us humans can produce. I am positive that we will one day break that barrier and let our worlds blend and immersion and innovation will just be a memory, but that time is not now. The way to get there is not through these technologies either, and we must accept that before we break our society in ways we fail to comprehend how to repair. We need to call liars, well: liars, and we need to do what's right for us as humans... and maybe, we will find how to remove those stains from our whites.
+
+
+# The SLO trap (04/26)
+
+Not long ago I wrote about the "dangers" of playing with numbers and how we can use them to support a narrative. This time I want to try something similar with an unrelated topic: service levels. I can only talk about my experience with the topic, but this is no proposal, if anything I'm just trying to tell a story.
+
+As site reliability gained traction across the tech industry, one of its pillars is the focus on service levels to measure a system's conformance. The idea of using service levels to measure how close you deliver to expectations is as complex as the concept behind, expectations are subjective, and even if you manage to stick to a metric, expectations will drive your goals, so you need to bring an even more complex idea: realism.
+
+The problem with realism is that it requires experience and common sense... Did I mention humility? Many times I have seen teams churning trying to optimize for a goal that is not helping the business and maybe this post is all about that. Having a clear understanding on what is achievable and how costly it is to miss a point regardless of how ambitious your performance projection is. A good service level attainment not only requires operating with excellence but knowing that like speed, with every extra mile per hour, drag turns more and more into a concern.
+
+## So where do we start?
+
+Let's try the basics... What is the use you give to a service level objective?
+
+Often, I see the 99.9 service level being used more as a marketing point than a value offer. That's mostly because the "ready when you are" pitch sounds amazing. But let's dig down a little bit: when we offer 99.9% of something, what is it exactly we are offering and what is the effect of that 0.1% we leave as an error budget to a service?
+
+A service level objective can be created around many metrics: availability, throughput, latency, error rate, freshness, correctness, just to name some; that of course was defined by a contract before becoming the objective but once you have it, you are committed to it, so your commitment needs understanding on what will happen when you fail to meet such objective. Why do we think of failure first? Because we need to understand what is at stake and because we owe analysis on what is the effect on every point we hit or miss, because if we use the service level objective as a guideline to drive our operations, that guideline needs to explain the full picture of them. This sounds exaggerated, not to say critical, and that's the first trap we may fall into, committing to something we don't understand, and using such measurement to drive our decisions blindly.
+
+## How do I drive my analysis then?
+
+This is where the engineering part begins. We want to understand how the median of the metric we use as a service level indicator looks for the business, then we want to understand how the outliers look, then we dive into the long tail part of the data. Why do we have to go to such an extent? Well, if your service level is created around latency, and you accept 0.1% of requests to violate your threshold, you need to figure out by how much that threshold is being breached. If the long tail has requests of seconds on a millisecond objective, is that 0.1% on 1 out of a 1000 requests? What if it is 1000 out of a million? The ratio is the same, but the volume is not! What if those 1000 requests correspond to 90% of your revenue? What if those 1000 requests correspond to 0.001% of it? It is not the same impact! What if 95% of the requests create 99% of the value for your business? Is that extra 4.9% worth the engineering effort? There's a myriad of questions you need to ask in order to understand things properly, this is when we bring reality into the game, when we confront a decision with data. I will not delve into the quality of our data points or the effect sampling can have on it, but the idea holds, a decision needs to be put to test, then the service level objective actually means something.
+
+## What comes after?
+
+Well, let's recap first, maybe I left some blanks...
+
+You have a service level agreement, you use that contractual obligation to pick an objective that is going to be a driver for your operations; beware of the trap of pairing an SLA with an SLO, commonly, in site reliability your error budget is an indicator of capacity where effort can be spent without impacting your service, if these two are matched you willingly give up any buffer, then it is a hard deadline and site reliability, ideally, is an enabling effort, not gate keeping. So, you have an obligation, an objective and a metric that is going to indicate your attainment. Well, you have the guidelines, so you're ready to enact and validate.
+
+I have seen many teams stopping at creating a dashboard where SLOs are the metric to look at. That is wrong. Your service level objective is the guidance for your operations, but it needs to be granular enough to actually represent them. The trap in here is directing efforts to restore a level without understanding its impact. Your indicators will keep your operations in check with your objectives, you cannot just look at how much an objective is met to understand the whys and a binary interpretation is not a rational option. Just like the deviations require analysis, the readout of the objective fulfillment is just the start to create action items or policies to sustain an operational level. Sometimes, if you're curious enough, it can also present the opportunity to loosen these objectives and divert engineering efforts towards a goal with higher yields to your business model. The key here is the analysis work.
+
+Putting this all together, the service level use is not the ultimate goal, it is the guideline on where business promises and objectives are met. These of course are just in principle telling a story, a story that is sustained by data, data that is tracked using metrics and that represents how a system performs and delivers according to an agreement. Service level traps are mostly related to unrealistic goals and blindly pursuing them; the dangers of not being able to tell a story from these is simply not being able to understand how a system aligns to a business, and I dare to say: Site reliability is all about it.
+
+
+# Site Reliability Scorecard (04/26)
+
+The concept to be discussed here is neither new nor unique. Not long ago I was exploring positions where the pursued profile was someone capable of establishing site reliability. I think I have an idea on what good site reliability would look like if I had to define it; so I am going to explore that idea in this post.
+
+Site reliability has been around for over 2 decades, so it has had enough time to mature and define its principles, however, we often fall short or overextend what we want to achieve with site reliability, or worse, we achieve nothing. If we had to describe what makes site reliability different than IT service management or DevOps, I think the simplest answer is that site reliability wants to streamline operations through engineering practices. The benefit of this is not only about tooling and processes or creating an on-call roster to tend service operations, nor is the sudden implementation of service levels, it is the transformation of products and operations into measurable, predictable, repeatable and controllable systems.
+
+In the perfect environment, site reliability defines the operational platform and the practices to follow and then engineering takes over by absorbing the operations of their products so site reliability is not a group of people but an operational mindset absorbed by engineers; this scales. Yet like with other parts of a platform or products running on top of the platform, we need expertise and tools that can help us navigate a workflow. Considering all this, I wondered if there is a way we could simply try to score a product's reliability based on what the principles of site reliability are, and even, operational excellence.
+
+With the four qualities in mind (measurable, predictable, repeatable and controllable), we can now define a set of properties that can result in a reliable operation. Some of these qualities overlap, but that's acceptable here, we want to understand a product's readiness for both failure and change.
+
+## Preparing the scorecard
+
+I have read several posts that heavily focus on metrics or operations, although this is not incorrect, I think these posts are reflective of the reality of the author's operational environment. Not all organizations enjoy the same levels of maturity or adoption of operational practices; not all organizations are working at the same scale in the same environment, and while we have been force fed many _de facto_ tools and frameworks, it is only right to not assume anything.
+
+Measurable systems not only cover what is defined as golden signals (errors, saturation, latency and load); they also consider service levels (agreements, indicators, objectives and error budget), the definition of correct, the data and its lineage (this can extend to other not less relevant metrics for data governance like freshness, correctness, consistency, completeness). When we talk about what measurable systems are, we don't want observability only, we want to understand how our system behaves under stress, under uncertainty, under failure, what is impacted by it, what impacts it, and the effectiveness of how we respond to those scenarios. The quality of the data is not less relevant; having a myriad of metrics and signals can lead to complexity or distractions in the analysis process. If I could advise anything, it would be to focus on the definition of correct, "test for the expectation, measure for the exception".
+
+Predictability is about understanding how a system behaves when it is affected by what can and can't be controlled. We know that failure is inevitable, but we can be ready for it. Understanding how a system performs under load or the lack of it is paramount to establish a system's limits, but it is also important to plan for disaster, to define capacity, to define degradation, isolation, blast radius of failure and even to validate the capacity to satisfy a service level. A predictable system will lead to control.
+
+A system that can be reproduced is effectively a system that can recover. When we refer to a system that is reproducible, we not only imply the artifacts that compose it, we want a system that has a clean separation of concerns, that can progress its release process and that leaves a track of its operations. Upon failure, these abilities allow a system to exist in a different location and to process data with predictable results.
+
+Finally control is not only about being able to operate a system, but about having a clean understanding of what it takes to operate it, what is its scope, domain and who is accountable for it. Controllable systems have the qualities mentioned before, leaving no room for ambiguity. A system in control has no room for inaction.
+
+How do we compress all of this into a rubric? Well, this is dependent on our maturity, but let me suggest some reasonable action items:
+
+**Measurability**
+
+  - Service levels monitored
+  - Alerting attainment to service level indicators
+  - System metrics defined
+    - Metrics coverage
+    - Business metrics defined
+    - Business metrics aligned to site capacity
+  
+  - Incident management and resolution tracking
+  - Release and configuration management tracking
+  - Data lineage defined
+  - Dependencies monitored
+
+**Predictability**
+
+  - System load testing
+  - Site load testing
+  - Documentation freshness in alignment with product release plan
+  - Disaster recovery plan
+  - System failure injection
+  - Alternative site operation
+  - Site operation shift testing
+
+  - Fallback validation
+
+**Repeatability**
+
+  - Capacity plan in alignment with release plan
+  - Scale and health recovery mechanisms available
+  - Rollback mechanism available
+  - Test coverage
+  - Release and validation track
+
+**Control**
+
+  - System audit plan
+  - Product ownership
+  - Role definition
+  - Change management process definition
+  - Signoff process definition
+
+  - Incident resolution definition
+
+Note here I don't stick to mean time to anything, automation or something-as-something-else, all I care for now is the ability to have these covered independently of the tools we use, that's because the adoption of a tool without good discipline can be a hindrance to the process itself. How do you grade this then? Just figure out if you have this implemented in a general to particular approach, e.g. you can claim you have this for your video streaming platform, well, check if that holds for the components, then for the endpoints (use your service levels as guidelines), eventually you will find out if the sum of the parts is actually reflecting the readiness of your systems' operations.
+
+Wait, this is all too complex! Can I just use something out of Medium? Well, go for it, but ideally, the simplification will come as you feed these categories with what your operations and tools produce, then you will have a scorecard backed by data; my recommendation is to use the criteria to shape the data rather than letting the data shape the criteria.
+
+You just challenged the adoption of a tool, but you just proposed using one! That's a fair statement. A scorecard is meant to give you visibility on your readiness on adoption of a reliability mindset. Focusing only on ticking the boxes is as useless as focusing on creating a dashboard for the sake of it. Adopting a scorecard is meant to give you a sense of which of the 4 qualities mentioned earlier is in need for improvement. You may rate your service scorecard an A+ and still live in a constant _firefighting_ mode because your service is continuously failing. The key here is that the scorecard is not built to rate your system's robustness, it scores your system's preparedness for dealing with failure.
+
+
+# Operational excellence (04/26)
+
+As we delve into site reliability, I like to make a distinction; I see site reliability as a mindset rather than just a position. A mindset that values business continuity. It is also a mindset that acknowledges that operating with excellence includes being ready for an inevitable failure and implementing an effective strategy of containment and mitigation.
+
+I have seen many companies jump straight into creating a team just to get lost in a sea of bureaucracy, signal noise and artifacts that ironically become toil or by centralizing the effort just to come to the conclusion that the centralization created a bottleneck. I also have made the effort to unwind this mess by transferring back the ability to run their systems to the engineers themselves. It is not easy and definitely not immediate.
+
+If there is a justification for a team, it is for them to serve as advisors, using their expertise to define good practices that help our systems attain these four qualities: measurability, predictability, repeatability and control. We can also use that expertise to implement a feedback loop that can benefit our organization and its ability to operate to the highest standards of resiliency. For the rest of our organization, it just makes sense to prioritize the ability to operate our business over any other initiative. Sometimes we may choose to run in a degraded state or accept consuming our error budget, however, these decisions should never be permanent. Ultimately stability is paramount for the benefit of our business.

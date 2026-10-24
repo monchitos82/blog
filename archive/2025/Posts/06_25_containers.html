@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="author" content="monchitos82">
+    <meta name="description" content="My personal blog">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="https://https://monchitos82.github.io/ramongarciamx/style.css">
+    <link rel="icon" type="image/x-icon" href="https://https://monchitos82.github.io/ramongarciamx/favicon.ico">
+    <title>Monchitos 82 Blog (Archive Posts 2025)</title>
+  </head>
+  <body>
+    <header>
+      <div id="top"></div>
+    </header>
+    <nav aria-label="Archive Posts Navigation">
+      <div class="progressbar-container" aria-hidden="true">
+        <div class="progressbar"></div>
+      </div>
+      <div class="nav-links small">
+        <a href="https://https://monchitos82.github.io/ramongarciamx/archive/2025/Posts/index.html" title="Go back" aria-label="Return to the 2025 posts' index">&larr; Return to the 2025 posts' index</a>
+      </div>
+    </nav>
+    <main>
+      <h1>Containers (06/25)</h1>
+      <p>I have to start here by saying I am no expert in containers. I have been around to watch and participate in the transition from VMs to containers. I have used many and yet not enough of them. This entry is another one of my tiny ass cheat sheet entries by the way.</p>
+      <p>Anyway, my interest in virtualization and hypervisors dates a couple decades back. I started when vmware was the shit and back then I had no clue what to use it for. I recall having a client running in my budget machine and never delving into what I could do with it because my understanding of Linux was more than limited. Then I graduated college, started delving into Solaris and started hating to do all my work via putty so I ended up finding a way to use virtualbox and a USB to get a terminal and an IDE that actually felt comfortable rather than using notepad++ and putty to get things done. So back then all I understood about isolation were permissions and root privileges, never thought (or learned) about chroot and what a good tool it was to break apart an application path, so for sure cgroups were out of the map.</p>
+      <p>Then docker came along and it was pure magic, the idea of having an image where you could install, test and ship your code was very exciting, specially when most of my work was done by a playbook, so having a way to automate the build and a way to ship in a tested manner where no installation was required felt like a big time saver. But then one wonders, what is this container actually doing and why do I still use virtualbox anyway? That was a question it took me some time to answer. Articles and demos all mentioned something about borrowing what is part of the kernel, but never mentioned which parts. Well, that's where that explanation sucks because to be fair nothing is borrowed, in the simplest term, a container is just creating a partition within the OS resources to create isolation. Had this been told just like that the concept would be super simple to digest, but you know, people like to sound smart.</p>
+      <p>I think I never pulled apart from the abstraction docker created and what actually was going on underneath until I stumbled upon a place where containers were self managed! What? You don't use docker for that? It took no time to see docker falling out of fashion and kubernetes ramping up, still, the notion of what is being <strong>used</strong> from the OS itself was intriguing without understanding what is <code>libvirt</code>, what's LXC, what are namespaces and cgroups. So let's try to dig into those things, shall we?</p>
+      <p>I start with <code>libvirt</code> because it is a quite useful API to communicate the OS with different hypervisors, not to mention giving us tools for management of resources. This comes handy when we try to understand the concept of an orchestrator, although this might feel low level, the tooling and the API we have to work with hypervisors, including LXC is key for managing what the container platform creates. I don't think the mentioned library has much to do (if anything) with containers, still it is worth mentioning, because part of the need for containers comes from the need to communicate to parts of the kernel through an API like this one.</p>
+      <p>Moving on to LXC and why using it paired with <code>libvirt</code> can be useful to get a similar functionality to Docker, we need to understand what the Linux containers project actually is. LXC is not really what introduced the isolation it is going to work with, but it has a nice way to abstract it so we can focus on defining resources and types without delving into what components of the kernel itself is leveraging to provide isolation for an application. No wonder docker started building around it when it started. But trying to dig deeper, can we do our own container by hand?</p>
+      <p>Well, circling back to the "self managed" mention, yes: Isolation rather than virtualization (we should always make that distinction when we talk about containers) means that we provide the mechanisms from the kernel itself for an application to run without any awareness of what runs outside its restricted space. How is that achieved? through a set of features from the kernel, of course: capabilities, cgroups, namespaces, policies and filesystem isolation (chroot comes into play again).</p>
+      <h2>But why or how does this work?</h2>
+      <p>Let's think about an application that requires a certain set of libraries, directories, processes and calls to run. If we already have a kernel that provides its scheduler and sys-calls, we don't really need to worry about that layer. If we however try to use PID 1 for this application and limit what runs on the OS to a given process, we need a way to let that application "believe" that it is the only one running. Using concepts like namespaces and cgroups that can be achieved, namespaces will tag a set of resources to be used for a specific process and limit its view, what the process can see, to what namespaces has tagged (in a OS structure point of view, this includes the PID tree, networking, ipc, hostname, user mapping and mounting points just to name some, depending on what you define using <code>unshare</code>) while cgroups will reserve and limit the resources that are provisioned to the process (you need <code>cgroup-tools</code> to get this working since you need a cgroup created using <code>cgcreate</code> and add resources using <code>cgset</code>). Is this enough to contain a process? To some extent it is, however the restriction is not limiting access to sys-calls and other critical parts of the OS, thus, the use of capabilities and apparmor policies are needed not only to isolate a process, but to restrict it from operating beyond its own scope (we can see how this one works using <code>showpcaps</code> on a PID and set it using <code>capsh</code>).</p>
+      <h2>So is docker needed at all? What about kubernetes?</h2>
+      <p>Well, docker, just like LXC abstracts and simplifies the operation with containers, just like libvirt and the docker daemon simplify the orchestration at host level. Why is this the first time I mention kubernetes? Because kubernetes is not really part of this orchestration, it lives and operates on a different layer, where groups of containers (or machines) are the abstracted resources so basically executing this same concept at a different scale of resources.</p>
+      <p>In my experience, all that is needed, all the "magic" is provided by the Linux kernel. We are sold this as a breakthrough but this magic has been around since 2002 and widely adopted in 2008. I have used "in-house crafted" versions of these orchestrators and containerization platforms, they worked and worked quite well. Am I suggesting not using docker or kubernetes? Not at all, these platforms are convenient, especially paired with cloud providers, however, they mean complexity just as using AWS means complexity managing resources through a non-standard API, yet they are great enablers for scalability when done right, and a strong implementation of what these concepts propose on resource isolation.</p>
+      <h2>Other parts I should mention?</h2>
+      <p>Sure: UFS! Although not necessary, the union-filesystem is a layered approach where space is managed with the intent to prevent copying and duplicating files across containers. This provides not only access to different filesystems through a unified view but it allows access to parts of the container like the image where files (read only) can be accessed by different containers, that's why it is a key part of docker, however, it is not an exclusive approach of a layered access Fylesystem for user spaces, LXC has its own implementation, however the key purpose of each is different.</p>
+      <p>And that's it, containers are all about local isolation. Hypervisors are a different animal, they implement their own microcode, drivers and access to resources so while they can run on top of another OS, their purpose is to provide an isolated platform for an OS itself. And this just took me years to understand and explain.</p>
+      <p>What do I use? Well I use what suits my needs, podman for the time being.</p>
+    </main>
+    <footer>
+      <div class="centered">
+        <a href="#top" class="back-to-top small bottom" title="Top" aria-label="Scroll to top">↑ Top ↑</a>
+      </div>
+    </footer>
+  </body>
+</html>

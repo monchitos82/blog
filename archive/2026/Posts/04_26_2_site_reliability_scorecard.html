@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="author" content="monchitos82">
+    <meta name="description" content="My personal blog">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="https://https://monchitos82.github.io/ramongarciamx/style.css">
+    <link rel="icon" type="image/x-icon" href="https://https://monchitos82.github.io/ramongarciamx/favicon.ico">
+    <title>Monchitos 82 Blog (Archive Posts 2026)</title>
+  </head>
+  <body>
+    <header>
+      <div id="top"></div>   
+    </header>
+    <nav aria-label="Archive Posts Navigation">
+      <div class="progressbar-container" aria-hidden="true">
+        <div class="progressbar"></div>
+      </div>
+      <div class="nav-links small">
+        <a href="https://https://monchitos82.github.io/ramongarciamx/archive/2026/Posts/index.html" title="Go back" aria-label="Return to the 2026 posts' index">&larr; Return to the 2026 posts' index</a>
+      </div>
+    </nav>
+    <main>
+      <h1>Site Reliability Scorecard (04/26)</h1>
+      <p>The concept to be discussed here is neither new nor unique. Not long ago I was exploring positions where the pursued profile was someone capable of establishing site reliability. I think I have an idea on what good site reliability would look like if I had to define it; so I am going to explore that idea in this post.</p>
+      <p>Site reliability has been around for over 2 decades, so it has had enough time to mature and define its principles, however, we often fall short or overextend what we want to achieve with site reliability, or worse, we achieve nothing. If we had to describe what makes site reliability different than IT service management or DevOps, I think the simplest answer is that site reliability wants to streamline operations through engineering practices. The benefit of this is not only about tooling and processes or creating an on-call roster to tend service operations, nor is the sudden implementation of service levels, it is the transformation of products and operations into measurable, predictable, repeatable and controllable systems.</p>
+      <p>In the perfect environment, site reliability defines the operational platform and the practices to follow and then engineering takes over by absorbing the operations of their products so site reliability is not a group of people but an operational mindset absorbed by engineers; this scales. Yet like with other parts of a platform or products running on top of the platform, we need expertise and tools that can help us navigate a workflow. Considering all this, I wondered if there is a way we could simply try to score a product's reliability based on what the principles of site reliability are, and even, operational excellence.</p>
+      <p>With the four qualities in mind (measurable, predictable, repeatable and controllable), we can now define a set of properties that can result in a reliable operation. Some of these qualities overlap, but that's acceptable here, we want to understand a product's readiness for both failure and change.</p>
+      <h2>Preparing the scorecard</h2>
+      <p>I have read several posts that heavily focus on metrics or operations, although this is not incorrect, I think these posts are reflective of the reality of the author's operational environment. Not all organizations enjoy the same levels of maturity or adoption of operational practices; not all organizations are working at the same scale in the same environment, and while we have been force fed many <em>de facto</em> tools and frameworks, it is only right to not assume anything.</p>
+      <p>Measurable systems not only cover what is defined as golden signals (errors, saturation, latency and load); they also consider service levels (agreements, indicators, objectives and error budget), the definition of correct, the data and its lineage (this can extend to other not less relevant metrics for data governance like freshness, correctness, consistency, completeness). When we talk about what measurable systems are, we don't want observability only, we want to understand how our system behaves under stress, under uncertainty, under failure, what is impacted by it, what impacts it, and the effectiveness of how we respond to those scenarios. The quality of the data is not less relevant; having a myriad of metrics and signals can lead to complexity or distractions in the analysis process. If I could advise anything, it would be to focus on the definition of <strong>correct</strong>, "test for the expectation, measure for the exception".</p>
+      <p>Predictability is about understanding how a system behaves when it is affected by what can and can't be controlled. We know that failure is inevitable, but we can be ready for it. Understanding how a system performs under load or the lack of it is paramount to establish a system's limits, but it is also important to plan for disaster, to define capacity, to define degradation, isolation, blast radius of failure and even to validate the capacity to satisfy a service level. A predictable system will lead to control.</p>
+      <p>A system that can be reproduced is effectively a system that can recover. When we refer to a system that is reproducible, we not only imply the artifacts that compose it, we want a system that has a clean separation of concerns, that can progress its release process and that leaves a track of its operations. Upon failure, these abilities allow a system to exist in a different location and to process data with predictable results.</p>
+      <p>Finally control is not only about being able to operate a system, but about having a clean understanding of what it takes to operate it, what is its scope, domain and who is accountable for it. Controllable systems have the qualities mentioned before, leaving no room for ambiguity. A system in control has no room for inaction.</p>
+      <p>How do we compress all of this into a rubric? Well, this is dependent on our maturity, but let me suggest some reasonable action items:</p>
+      <p><strong>Measurability</strong></p>
+      <ul>
+        <li>Service levels monitored</li>
+        <li>Alerting attainment to service level indicators</li>
+        <li>System metrics defined</li>
+          <ul>
+            <li>Metrics coverage</li>
+            <li>Business metrics defined</li>
+            <li>Business metrics aligned to site capacity</li>
+          </ul>
+        <br>
+        <li>Incident management and resolution tracking</li>
+        <li>Release and configuration management tracking</li>
+        <li>Data lineage defined</li>
+        <li>Dependencies monitored</li>
+      </ul>
+      <p><strong>Predictability</strong></p>
+      <ul>
+        <li>System load testing</li>
+        <li>Site load testing</li>
+        <li>Documentation freshness in alignment with product release plan</li>
+        <li>Disaster recovery plan</li>
+        <li>System failure injection</li>
+        <li>Alternative site operation</li>
+        <li>Site operation shift testing</li>
+        <br>
+        <li>Fallback validation</li>
+      </ul>
+      <p><strong>Repeatability</strong></p>
+      <ul>
+        <li>Capacity plan in alignment with release plan</li>
+        <li>Scale and health recovery mechanisms available</li>
+        <li>Rollback mechanism available</li>
+        <li>Test coverage</li>
+        <li>Release and validation track</li>
+      </ul>
+      <p><strong>Control</strong></p>
+      <ul>
+        <li>System audit plan</li>
+        <li>Product ownership</li>
+        <li>Role definition</li>
+        <li>Change management process definition</li>
+        <li>Signoff process definition</li>
+      <br>
+      <li>Incident resolution definition</li>
+      </ul>
+      <p>Note here I don't stick to mean time to anything, automation or something-as-something-else, all I care for now is the ability to have these covered independently of the tools we use, that's because the adoption of a tool without good discipline can be a hindrance to the process itself. How do you grade this then? Just figure out if you have this implemented in a general to particular approach, e.g. you can claim you have this for your video streaming platform, well, check if that holds for the components, then for the endpoints (use your service levels as guidelines), eventually you will find out if the sum of the parts is actually reflecting the readiness of your systems' operations. </p>
+      <p>Wait, this is all too complex! Can I just use something out of Medium? Well, go for it, but ideally, the simplification will come as you feed these categories with what your operations and tools produce, then you will have a scorecard backed by data; my recommendation is to use the criteria to shape the data rather than letting the data shape the criteria.</p>
+      <p>You just challenged the adoption of a tool, but you just proposed using one! That's a fair statement. A scorecard is meant to give you visibility on your readiness on adoption of a reliability mindset. Focusing only on ticking the boxes is as useless as focusing on creating a dashboard for the sake of it. Adopting a scorecard is meant to give you a sense of which of the 4 qualities mentioned earlier is in need for improvement. You may rate your service scorecard an <code>A+</code> and still live in a constant <em>firefighting mode</em> because your service is continuously failing. The key here is that the scorecard is not built to rate your system's robustness, it scores your system's preparedness for dealing with failure.</p>
+    </main>
+    <footer>
+      <div class="centered">
+        <a href="#top" class="back-to-top small bottom" title="Top" aria-label="Scroll to top">↑ Top ↑</a>
+      </div>
+    </footer>
+  </body>
+</html>

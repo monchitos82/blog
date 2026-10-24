@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="author" content="monchitos82">
+    <meta name="description" content="My personal blog">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="https://https://monchitos82.github.io/ramongarciamx/style.css">
+    <link rel="icon" type="image/x-icon" href="https://https://monchitos82.github.io/ramongarciamx/favicon.ico">
+    <title>Monchitos 82 Blog (Archive Posts 2026)</title>
+  </head>
+  <body>
+    <header>
+      <div id="top"></div>   
+    </header>
+    <nav aria-label="Archive Posts Navigation">
+      <div class="progressbar-container" aria-hidden="true">
+        <div class="progressbar"></div>
+      </div>
+      <div class="nav-links small">
+        <a href="https://https://monchitos82.github.io/ramongarciamx/archive/2026/Posts/index.html" title="Go back" aria-label="Return to the 2026 posts' index">&larr; Return to the 2026 posts' index</a>
+      </div>
+    </nav>
+    <main>
+      <h1>The SLO trap (04/26)</h1>
+      <p>Not long ago I wrote about the "dangers" of playing with numbers and how we can use them to support a narrative. This time I want to try something similar with an unrelated topic: service levels. I can only talk about my experience with the topic, but this is no proposal, if anything I'm just trying to tell a story.</p>
+      <p>As site reliability gained traction across the tech industry, one of its pillars is the focus on service levels to measure a system's conformance. The idea of using service levels to measure how close you deliver to expectations is as complex as the concept behind, expectations are subjective, and even if you manage to stick to a metric, expectations will drive your goals, so you need to bring an even more complex idea: realism.</p>
+      <p>The problem with realism is that it requires experience and common sense... Did I mention humility? Many times I have seen teams churning trying to optimize for a goal that is not helping the business and maybe this post is all about that. Having a clear understanding on what is achievable and how costly it is to miss a point regardless of how ambitious your performance projection is. A good service level attainment not only requires operating with excellence but knowing that like speed, with every extra mile per hour, drag turns more and more into a concern.</p>
+      <h2>So where do we start?</h2>
+      <p>Let's try the basics... What is the use you give to a service level objective?</p>
+      <p>Often, I see the 99.9 service level being used more as a marketing point than a value offer. That's mostly because the "ready when you are" pitch sounds amazing. But let's dig down a little bit: when we offer 99.9% of something, what is it exactly we are offering and what is the effect of that 0.1% we leave as an error budget to a service?</p>
+      <p>A service level objective can be created around many metrics: availability, throughput, latency, error rate, freshness, correctness, just to name some; that of course was defined by a contract before becoming the objective but once you have it, you are committed to it, so your commitment needs understanding on what will happen when you fail to meet such objective. Why do we think of failure first? Because we need to understand what is at stake and because we owe analysis on what is the effect on every point we hit or miss, because if we use the service level objective as a guideline to drive our operations, that guideline needs to explain the full picture of them. This sounds exaggerated, not to say critical, and that's the first trap we may fall into, committing to something we don't understand, and using such measurement to drive our decisions blindly.</p>
+      <h2>How do I drive my analysis then?</h2>
+      <p>This is where the engineering part begins. We want to understand how the median of the metric we use as a service level indicator looks for the business, then we want to understand how the outliers look, then we dive into the long tail part of the data. Why do we have to go to such an extent? Well, if your service level is created around latency, and you accept 0.1% of requests to violate your threshold, you need to figure out by how much that threshold is being breached. If the long tail has requests of seconds on a millisecond objective, is that 0.1% on 1 out of a 1000 requests? What if it is 1000 out of a million? The ratio is the same, but the volume is not! What if those 1000 requests correspond to 90% of your revenue? What if those 1000 requests correspond to 0.001% of it? It is not the same impact! What if 95% of the requests create 99% of the value for your business? Is that extra 4.9% worth the engineering effort? There's a myriad of questions you need to ask in order to understand things properly, this is when we bring reality into the game, when we confront a decision with data. I will not delve into the quality of our data points or the effect sampling can have on it, but the idea holds, a decision needs to be put to test, then the service level objective actually means something.</p>
+      <h2>What comes after?</h2>
+      <p>Well, let's recap first, maybe I left some blanks...</p>
+      <p>You have a service level agreement, you use that contractual obligation to pick an objective that is going to be a driver for your operations; beware of the trap of pairing an SLA with an SLO, commonly, in site reliability your error budget is an indicator of capacity where effort can be spent without impacting your service, if these two are matched you willingly give up any buffer, then it is a hard deadline and site reliability, ideally, is an enabling effort, not gate keeping. So, you have an obligation, an objective and a metric that is going to indicate your attainment. Well, you have the guidelines, so you're ready to enact and validate.</p>
+      <p>I have seen many teams stopping at creating a dashboard where SLOs are the metric to look at. That is wrong. Your service level objective is the guidance for your operations, but it needs to be granular enough to actually represent them. The trap in here is directing efforts to restore a level without understanding its impact. Your indicators will keep your operations in check with your objectives, you cannot just look at how much an objective is met to understand the whys and a binary interpretation is not a rational option. Just like the deviations require analysis, the readout of the objective fulfillment is just the start to create action items or policies to sustain an operational level. Sometimes, if you're curious enough, it can also present the opportunity to loosen these objectives and divert engineering efforts towards a goal with higher yields to your business model. The key here is the analysis work.</p>
+      <p>Putting this all together, the service level use is not the ultimate goal, it is the guideline on where business promises and objectives are met. These of course are just in principle telling a story, a story that is sustained by data, data that is tracked using metrics and that represents how a system performs and delivers according to an agreement. Service level traps are mostly related to unrealistic goals and blindly pursuing them; the dangers of not being able to tell a story from these is simply not being able to understand how a system aligns to a business, and I dare to say: Site reliability is all about it.</p>
+    </main>
+    <footer>
+      <div class="centered">
+        <a href="#top" class="back-to-top small bottom" title="Top" aria-label="Scroll to top">↑ Top ↑</a>
+      </div>
+    </footer>
+  </body>
+</html>

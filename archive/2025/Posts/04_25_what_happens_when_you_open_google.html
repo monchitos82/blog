@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="author" content="monchitos82">
+    <meta name="description" content="My personal blog">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" href="https://https://monchitos82.github.io/ramongarciamx/style.css">
+    <link rel="icon" type="image/x-icon" href="https://https://monchitos82.github.io/ramongarciamx/favicon.ico">
+    <title>Monchitos 82 Blog (Archive Posts 2025)</title>
+  </head>
+  <body>
+    <header>
+      <div id="top"></div>
+    </header>
+    <nav aria-label="Archive Posts Navigation">
+      <div class="progressbar-container" aria-hidden="true">
+        <div class="progressbar"></div>
+      </div>
+      <div class="nav-links small">
+        <a href="https://https://monchitos82.github.io/ramongarciamx/archive/2025/Posts/index.html" title="Go back" aria-label="Return to the 2025 posts' index">&larr; Return to the 2025 posts' index</a>
+      </div>
+    </nav>
+    <main>
+      <h1>What happens when you open google.com in your browser? (04/25)</h1>
+      <p>This is the first entry of what I will call: Tiny ass cheat sheet, where posts aren't going to be tiny, not reflective of anything going on with my life, yet I am trying to give some closure to some questions where either I bombed or had a <em>what if</em> moments.</p>
+      <p>So what happens when you call google.com from either your browser, curl, ping? This is a common systems engineering interview question, where the interviewer will try to delve into your understanding of networking, protocols, name resolution, etc.</p>
+      <p>So let's go step by step, alright? Your program will call google.com. It will create a socket (<code>socket()</code>) to connect to a remote address. There are going to be several steps involved, the first one will focus on name resolution, well, because you are using a name. So <code>connect()</code> will first of all require an address. Your OS will likely go to <code>nsswitch</code> to seek where the naming info is taken from, either a Berkeley database or a file. Normally, this is a file (<code>hosts</code>) so next stop will be reading that file and -in this scenario- finding nothing, it would not stop there, but moving on to where our name resolution resources are configured (<code>resolv</code>). Yes, there were already a bunch of system calls already involved in the process of read and lookup, no, I will not mention those, I don't even know all of them (<code>bind()</code>, <code>listen()</code>, <code>read()</code>, <code>fstat()</code>, etc), so, the next stop is asking the gateway. This will require figuring out what address is the gateway (if not present in a routing table) so you're going to send (broadcast) an ARP call to your router if that one is missing or if the DHCP has not provided you with it (which likely had). So once you call your gateway (I will encompass the "gateway" part as your router and ISP here for simplicity, IRL the modem/router at home would forward the call to the ISP routers, POPs and so on, and so on... <code>computer -&gt; router -&gt; isp</code>) your next call in the path of what <code>sendto()</code> would try (at this point the socket creation is still in need of an address, you will try resolution first), here is another call pending to be mentioned <code>getaddrinfo()</code> which we need to define where is the request actually going. So let's talk about domain name (DNS) now.</p>
+      <p>Your lookup made it all the way to the gateway and no name to address relation is found yet, you will care about routes later, first you need an IP and that's where DNS will come into play. Chances are, your first DNS will be that one your ISP provided, so if the entry for the address is cached in it, you will have an address. Let's pretend it isn't what it is now? Your call will make the DNS go and ask the root level. There are few servers in this level, all they are going to do is direct the call to the next level in the lookup hierarchy: top level, that <code>.com</code> extension thingy. DNS relies on forwarding calls in a recursive manner so the request lands where it is likely to be present in a resolution table, yet most of this work is cached already, that explains why sometimes it takes time (lots of it sometimes), for a change to be consistent with reality... now feels like eventual consistency is not so new anymore right?</p>
+      <p>So the top level (TLD) will search its authoritative server for the domain name (<code>google.com</code>) and send the request there. Can I see this in my interface using <code>dig</code>?</p>
+      <p>Kind of, try: <code>dig +trace -4 google.com</code> and you see it. If you happen to have your own Bind9 DNS you are going to get a more thorough view. Cherry on top? Add <code>strace</code> and see the syscalls by yourself.</p>
+      <p>So assuming you have an address (in this case, likely an API gateway or a point of presence that will get you content via CDN), now what? And wait we were sending ARP broadcasts, was this part of it? Nope, these calls were UDP calls to a known path (yes, that routing happened behind scenes and you were basically talking to only one DNS machine), and unless the response was so large or DNSSEC was involved or simply you used <code>-tcp</code>, the call will always use UDP.</p>
+      <p>Once you have your IP, your <code>connect()</code> call has a place to go. Now the routing tables in the network including your ISP will direct your packet to the machine with that address. BGP will give devices the optimal route for your request to go, wanna see where that is going? <code>traceroute</code> can help.</p>
+      <p>So what goes on after? It depends, are you using ping? (if ICMP is enabled) you have an echo request. If on the other hand your call uses HTTP and TLS, then the call is slightly more complicated, your call will be processed by an HTTP server. If TLS is enabled you will have a TLS handshake. If the server handles more than one nameserver, it will need to find the appropriate certificate too (SNI), but the dance is quite the same: <code>ClientHello</code>, <code>ServerHello</code>, you had a negotiation for mechanism, supported extensions, key exchange and start data transmission. In a nutshell:</p>
+      <p><code>ARP-&gt;UDP-&gt;TCP-&gt;TLS-&gt;HTTP</code></p>
+      <p>This is an imperfect way to paint it as a whole, yet it can be more complete than those infographic diagrams you find at LinkedIn if you care to read through.</p>
+    </main>
+    <footer>
+      <div class="centered">
+        <a href="#top" class="back-to-top small bottom" title="Top" aria-label="Scroll to top">↑ Top ↑</a>
+      </div>
+    </footer>
+  </body>
+</html>
