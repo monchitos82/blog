@@ -104,7 +104,7 @@ So, please, if you read this, next time you are presented with statistics, be re
 
 # AI laundry (03/26)
 
-A disclaimer: I am no machine-learning or data scientist expert, even when my Python code smells like fresh flowers. I seek to understand things beyond the surface, I understand some of the math beneath them, yet I don't know the in and outs of all parts of the training process in the new large language models.
+A disclaimer: I am no machine-learning or data scientist expert, even when my Python code is quite good, I seek to understand things beyond the surface, I understand some of the math beneath them, yet I don't know the in and outs of all parts of the training process in the new large language models.
 
 Having said that, I think all the promised disruption is nothing, but a sea of lies, sprinkled with some truths.
 
