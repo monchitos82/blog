@@ -233,6 +233,10 @@ ul.date-nav li a {
   text-decoration: none;
 }
 
+ul.date-nav li a:hover {
+  text-decoration: underline;
+}
+
 .accent {
   color: var(--accent-color);
 }
