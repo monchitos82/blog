@@ -234,6 +234,7 @@ ul.date-nav li a {
 }
 
 ul.date-nav li a:hover {
+  font-weight: bold;
   text-decoration: underline;
 }
 
