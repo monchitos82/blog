@@ -47,7 +47,6 @@ a {
 }
 
 a:hover {
-  text-decoration: underline;
   font-weight: bolder;
 }
 
@@ -189,12 +188,10 @@ ul.date-nav {
 ul.date-nav li a {
   color: var(--accent-color);
   padding: 0.25rem 0.5rem;
-  text-decoration: none;
 }
 
 ul.date-nav li a:hover {
   font-weight: bold;
-  text-decoration: underline;
 }
 
 .accent {
