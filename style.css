@@ -41,7 +41,6 @@
 
 a {
   color: var(--accent-color);
-  font-weight: 600;
   text-decoration-thickness: 0.0625rem;
   transition: color 0.2s ease;
 }
@@ -83,10 +82,6 @@ code {
 
 h1 {
   font-size: 1.2rem;
-}
-
-h2 {
-  font-size: 0.92rem;
 }
 
 h2,
