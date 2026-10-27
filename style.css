@@ -41,7 +41,7 @@
 
 a {
   color: var(--accent-color);
-  font-weight: bold;
+  font-weight: 600;
   text-decoration-thickness: 0.0625rem;
   transition: color 0.2s ease;
 }
@@ -290,7 +290,8 @@ ul.date-nav li a:hover {
   animation-name: progress;
   animation-timeline: scroll(y);
   background: var(--accent-color);
-  height: 3px;
+  height: 4px;
+  padding-bottom: 1px;
 }
 
 .progressbar-container {
