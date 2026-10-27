@@ -287,17 +287,19 @@ ul.date-nav li a:hover {
 
 .progressbar {
   animation-name: progress;
+  animation-duration: 1ms;
   animation-timeline: scroll(y);
   background: var(--accent-color);
   height: 4px;
   padding-bottom: 1px;
+  width: 0%;
 }
 
 .progressbar-container {
   background: transparent;
   left: 0;
   position: fixed;
-  top: 1px;
+  top: 0px;
   width: 100%;
   z-index: 9998;
 }
