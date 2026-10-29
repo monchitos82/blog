@@ -12,7 +12,7 @@
   </head>
   <body>
     <header>
-      <div id="top"></div>   
+      <div id="top"></div>
     </header>
     <nav aria-label="Archive Posts Navigation">
       <div class="progressbar-container" aria-hidden="true">
@@ -49,9 +49,9 @@
       <h2>3 - The truth hiding within latency's long tail</h2>
       <p>
         Latency metrics are very, very misleading when not properly understood. Let's start by something simple: metrics collection rarely will use a 100% sampling. That means, whatever you see, will already be manipulated by the time you run your analysis. Even if not, your options of analysis could be: using averages (very wrong), using percentiles (still misleading), using histograms (hard to break down right), or using individual datapoints (very hard to analyze and attribute). Latency normally tends to present itself within a normal distribution curve, but outliers are trickier than you think. Long tails can create the pareto of a pareto principle, you end up looking for multiple needles in multiple haystacks.
-      </p><p>  
+      </p><p>
         If you wrongly look at the average latency of a service being 500ms, then your latency might look ok, but what if you unwrap the data? If sampled, that means the average of 20, maybe 30% of all requests. It also skews the values where 8 requests respond in 500ms while 1 could take 100ms and another close to 2 seconds. If you look at percentiles it is not much better if you look at the wrong one, by this same example the P90 is 500ms, except in the long tail, you have a response that is close to 4x the rest. In real life examples, that number can shoot up to minutes and you wouldn't even notice... let alone what might happen with the 23-40 (<i>depending on the sample</i>) requests you didn't measure.
-      </p><p>  
+      </p><p>
         So, please, if you read this, next time you are presented with statistics, be ready to shoot some questions, be ready to dig for details, keep your calculator close and your criticism closer.
       </p>
     </main>
@@ -59,6 +59,7 @@
       <div class="centered">
         <a href="#top" class="back-to-top small bottom" title="Top" aria-label="Scroll to top">↑ Top ↑</a>
       </div>
+      <img src="https://monchitos82.goatcounter.com/count?p=/archive/2026/Posts/02_26_statistics_trap.html&t=02-26-statistics-trap" alt="tracking pixel to count visits in goatcounter.com">
     </footer>
   </body>
 </html>
