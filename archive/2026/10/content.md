@@ -13,8 +13,3 @@ Today I finally got my fingerprint reader working in Linux. The drivers produced
 
 So I think LLMs, AI, or whatever you want to call these tools are great for this line of work, but they should never, ever be used to replace learning, curiosity and eventually judgement, on the contrary, we will run out of people with these qualities and for now I am glad that young people are being brave enough to try regardless of what some doomer with a big mouth and an even bigger pocket says.
 
-
-## On and Off (2026-10-24)
-
-I am turning on my blog again (this time using GitHub). I have been doing some training and experimentation with whatever is emerging and as we approach the end of this month I can say it has been a useful exercise. I don't have interesting projects as a result of this though. I am not bringing back pipelines or any previous work I had. I used this time mostly to cover gaps and draw conclusions about things I don't get to use as my bread and butter, but remain relevant to my line of work.
-
