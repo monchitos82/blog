@@ -128,7 +128,7 @@ li.clean {
   list-style: none;
 }
 
-ul li::marker .accent {
+li::marker .accent {
   color: var(--accent-color);
 }
 
