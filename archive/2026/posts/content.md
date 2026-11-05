@@ -1,7 +1,3 @@
-Posts
----
-
-
 # Model routing 101 (01/26)
 
 Being the first post of 2026, I wanted to make this post something more complete without missing the opportunity to offer some technical advice or some criticism. I think I wanted to take the chance to work with LLMs again; it seems that the trend is catching up and I like to think I already learned a thing or two on the subject during the past few years.

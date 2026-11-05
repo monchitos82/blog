@@ -4,9 +4,9 @@
 Entries of this blog can be found in the archive. Please use the links below as they become available.
 
 - 2025
-  - [2025 Posts](https://monchitos82.github.io/blog/archive/2025/Posts/content.md)
+  - [2025 Posts](https://monchitos82.github.io/blog/archive/2025/posts/content.md)
 - 2026
-  - [2026 Posts](https://monchitos82.github.io/blog/archive/2026/Posts/content.md)
+  - [2026 Posts](https://monchitos82.github.io/blog/archive/2026/posts/content.md)
   - [October 2026 Entries](https://monchitos82.github.io/blog/archive/2026/10/content.md)
   - [November 2026 Entries](https://monchitos82.github.io/blog/archive/2026/11/content.md)
 
@@ -21,4 +21,3 @@ I don’t have much to propose in this brief thesis. My idea takes a few analogi
  Anyway, I am excited for this change and the opportunity it will create. We will see a new level of focus in all parts of a production process, from picking the right tools and setting them up in the right order as once Toyota engineers taught us. Improving the production lines continuously, not only the product we build. Improving the supply chains and logistics associated. Changing things like quality assurance to not only do a coverage analysis of unit cases but actually measure the output of our product lines and the quality of what is produced by our machines (agents). We will take observability to a different level. Measuring resource utilization, throughput, acceptance, rework and why not, even repurposing.
 
 Is this enthusiasm too sudden and too naive? I don’t think so. I think many parts of this industry (the software industry) will remain, just as you get to commission a knife to a Japanese blacksmith or a pair of shoes to an Italian artisan. Demand will remain for certain classes of products, and it will require a high degree of specialized skills to still exist and improve. For the rest, I hope we improve the parts where supply is still very rough (e.g. package managers and app stores) and accept that quality is good enough for the bulk of simple and repeatable operations.
-
