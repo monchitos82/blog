@@ -1,4 +1,5 @@
 # About me
+---
 
 My name is Ramon. This is my blog. I used to be a software engineer|systems engineer|site reliability engineer. I started my career in a central bank in Mexico and moved through different positions and industries until I had the privilege to work for a big tech company in California, USA in 2019. In 2024 due to personal circumstances (related to type 1 diabetes) I panicked and escaped the American health system and came back to an even worse system in Mexico. I have had the opportunity to contribute to different projects and initiatives, even, to my surprise, I was awarded SRE of the year by my organization in 2023. I have proudly mentored a few colleagues who are brilliant and helped them outgrew me (success!). In 2025 I made the mistake of joining a big four consulting group as a _madogiwazoku_ (did nothing but filling timesheets) I quit after a month and since then my career has pretty much died.
 

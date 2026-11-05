@@ -1,3 +1,6 @@
+# 2025 Posts
+---
+
 # Postmortems: (05/25)
 
 One of the best parts of Site Reliability **definitely** is: Executing blameless postmortems. It's one of the hardest too. Taking care of figuring out what went wrong and trying to come to action to fix what is broken is no small challenge and we all will be sloppy trying it the first time. There is a great shortcut to get there though, and it is actually documented: Reading engineering blogs, and playing the [wheel of misfortune](https://sre.google/sre-book/accelerating-sre-on-call).
