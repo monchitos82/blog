@@ -1,7 +1,7 @@
 # 2025 Posts
 ---
 
-# Postmortems: (05/25)
+## Postmortems: (05/25)
 
 One of the best parts of Site Reliability **definitely** is: Executing blameless postmortems. It's one of the hardest too. Taking care of figuring out what went wrong and trying to come to action to fix what is broken is no small challenge and we all will be sloppy trying it the first time. There is a great shortcut to get there though, and it is actually documented: Reading engineering blogs, and playing the [wheel of misfortune](https://sre.google/sre-book/accelerating-sre-on-call).
 
@@ -80,7 +80,7 @@ What happens after this?
 Well, if you write a good postmortem not only you helped solve a problem, you have good material for your engineering blog, a good tale for your nerd friends or a justification for your eye twitching.
 
 
-# Containers (06/25)
+## Containers (06/25)
 
 I have to start here by saying I am no expert in containers. I have been around to watch and participate in the transition from _VMs_ to containers. I have used many and yet not enough of them. This entry is another one of my tiny ass cheat sheet entries by the way.
 
@@ -115,7 +115,7 @@ And that's it, containers are all about local isolation. Hypervisors are a diffe
 What do I use? Well I use what suits my needs, _podman_ for the time being.
 
 
-# Application bottlenecks (08/25)
+## Application bottlenecks (08/25)
 
 I suck at Java. I have never written production grade Java code. But I have gotten to understand the Java virtual machine (JVM), especially because I was mentored by brilliant people who understand the language and the virtual machine inside out. I think one of my best opportunities back at my previous job was around understanding bottlenecks and tuning a JVM. Tuning a JVM is not something we should do out of ignorance though; the JVM defaults are quite effective when dealing with regular problems. I will not write a guide on how to profile projects or picking flags to tune the JVM, especially when it is something I am not doing on a daily basis, however I wanted to share some advice on getting started with profiling and understanding performance from more than a CPU utilization graph perspective.
 
