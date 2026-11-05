@@ -5,3 +5,6 @@ My name is Ramon. This is my blog. I used to be a software engineer|systems engi
 I don't consider myself a great engineer, however, I enjoy learning, applying, and overall using technology, thus, I still write this blog since I may have lost my job, but I still like the trade.
 
 I consider ethics, curiosity and fairness my compass. I love ideas more than tools. When I am not doing this, I am spending time with my family, fixing things at home or being the cleaning freak that I am. I tried gardening, but pretty much I cannot grow anything else than onions and tomatoes.
+
+If you feel like saying hi, feel free to throw me a message in the [issues section](https://github.com/monchitos82/blog/issues) of this repository.
+
