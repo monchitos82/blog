@@ -1,8 +1,9 @@
 # Content
 ---
 
-- [Rants](https://monchitos82.github.io/blog/rants/index.html)
-- [About me](https://monchitos82.github.io/blog/about/index.html)
+- [Rants](https://monchitos82.github.io/blog/rants/content.md)
+- [About me](https://monchitos82.github.io/blog/about/content.md)
+- [Resume](https://monchitos82.github.io/blog/resume/content.md)
 
 Entries of this blog can be found in the archive. Please use the links below as they become available.
 
