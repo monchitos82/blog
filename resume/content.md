@@ -46,15 +46,24 @@ Fachhochschule Oldenburg/Ostfriesland/Wilhelmshaven
 Instituto Tecnologico y de Estudios Superiores de Monterrey
 
 ## Technical Skills
-* Languages & Scripting: Python, Bash, Golang, JavaScript, Groovy, Ruby
-* Cloud & Containerization: AWS (S3, EC2, Lambda), Docker, Podman, K3d
-* DevOps & Infrastructure as Code (IaC): Terraform, Ansible, Git, Jenkins/GitHub Actions, Jira
-* Observability & Monitoring: Prometheus, Grafana, OpenTelemetry, Jaeger, Zabbix, Influx
-* Data & Streaming: Kafka, Airflow, Redis, PostgreSQL, Elasticsearch, MySQL
-* Testing & QA: Locust, Pytest, JMeter, Playwright, Selenium, Behave
-* Machine Learning & AI tools: ScikitLearn, Ollama, LangChain, MCP, RAG, Antigravity
+* **Languages & Scripting:** Python, Bash, Golang, JavaScript, Groovy, Ruby
+* **Cloud & Containerization:** AWS (S3, EC2, Lambda), Docker, Podman, K3d
+* **DevOps & Infrastructure as Code (IaC):** Terraform, Ansible, Git, Jenkins/GitHub Actions, Jira
+* **Observability & Monitoring:** Prometheus, Grafana, OpenTelemetry, Jaeger, Zabbix, Influx
+* **Data & Streaming:** Kafka, Airflow, Redis, PostgreSQL, Elasticsearch, MySQL
+* **Testing & QA:** Locust, Pytest, JMeter, Playwright, Selenium, Behave
+* **Machine Learning & AI tools:** ScikitLearn, Ollama, LangChain, MCP, RAG, Antigravity
 
 ## Other Projects
 
 ### Ansible (2017)
 * Contributed to Ansible by fixing bugs related to MySQL and Linux mount, and answering to issues in its [GitHub](https://github.com/search?q=org%3Aansible+monchitos82&type=issues) repository.
+
+### Languages
+* **Spanish:** Native
+* **English:** Fluent
+* **German:** Elementary
+* **French:** Elementary
+* **Chinese (普通話):** Elementary
+* **Japanese (日本語):** Elementary
+
