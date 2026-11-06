@@ -61,5 +61,4 @@ Instituto Tecnologico y de Estudios Superiores de Monterrey
 ## Other Projects
 
 ### Ansible (2017)
-* Contributed to Ansible by fixing bugs related to MySQL and Linux mount, and answering to
-issues in its Github repository.
+* Contributed to Ansible by fixing bugs related to MySQL and Linux mount, and answering to issues in its [GitHub](https://github.com/search?q=org%3Aansible+monchitos82&type=issues) repository.
