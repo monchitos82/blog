@@ -1,10 +1,6 @@
 # Resume
 ---
 
-<sub>
-  My contact data is not to be found in here, however, if you were directed here by a job board, you already have them.
-</sub>
-
 ## Professional Experience
 
 ### DCG Delivery Center Mexico (2025/04 - 2025/05)
