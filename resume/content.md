@@ -25,6 +25,13 @@ System analyst
   - Handled configuration management, integration testing, and payment routing protocols for national financial systems.
   - Authored a custom end-to-end log backup and validation system from scratch, automating collection, tape persistence, and retrieval tooling.
 
+## Technical Skills
+- **Languages & Frameworks:** Python, Bash, Golang, JavaScript, Groovy
+- **Cloud & Containerization:** AWS (S3, EC2, Lambda), Docker, Podman, K3d
+- **Infrastructure & DevOps:** Terraform, Ansible, Git, Jenkins, GitHub Actions
+- **Observability:** Prometheus, Grafana, OpenTelemetry, Jaeger, Zabbix
+- **Data & Streaming:** Kafka, Airflow, Redis, PostgreSQL, Elasticsearch
+
 ## Short-Term Contracts & Consulting
 
 ### DCG Delivery Center Mexico / Thomson Reuters (2025/04 – 2025/05)
@@ -46,17 +53,7 @@ Fachhochschule Oldenburg/Ostfriesland/Wilhelmshaven
 ### Bachelor of Science - Computer Systems Engineering (2000 - 2004)
 Instituto Tecnologico y de Estudios Superiores de Monterrey
 
-## Technical Skills
-- **Languages & Frameworks:** Python, Bash, Golang, JavaScript, Groovy
-- **Cloud & Containerization:** AWS (S3, EC2, Lambda), Docker, Podman, K3d
-- **Infrastructure & DevOps:** Terraform, Ansible, Git, Jenkins, GitHub Actions
-- **Observability:** Prometheus, Grafana, OpenTelemetry, Jaeger, Zabbix
-- **Data & Streaming:** Kafka, Airflow, Redis, PostgreSQL, Elasticsearch
-
-### Languages
+## Languages
 * **Spanish:** Native
 * **English:** Fluent
 * **German:** Elementary
-* **French:** Elementary
-* **Chinese (普通話):** Elementary
-* **Japanese (日本語):** Elementary
