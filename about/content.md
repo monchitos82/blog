@@ -1,4 +1,4 @@
-# About me
+# About Me
 
 Hi, my name is Ramon, and this is my blog.
 
