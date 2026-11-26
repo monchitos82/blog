@@ -52,9 +52,6 @@ Site Reliability Engineer
   
 ## Education
 
-### Master of Engineering - Technical Management (2007 - 2008)
-Fachhochschule Oldenburg/Ostfriesland/Wilhelmshaven
-
 ### Bachelor of Science - Computer Systems Engineering (2000 - 2004)
 Instituto Tecnologico y de Estudios Superiores de Monterrey
 
